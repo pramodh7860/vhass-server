@@ -47,7 +47,8 @@ app.use(cors({
     
     const allowedOrigins = [
       'http://localhost:3000',
-      'http://localhost:5001'
+      'http://localhost:5001',
+      'https://vhass-server-1.onrender.com'
     ];
     
     if (allowedOrigins.indexOf(origin) !== -1) {
