@@ -50,18 +50,24 @@ app.use(cors({
       'http://localhost:3000',
       'http://localhost:5001',
       FRONTEND_URL,
-      BACKEND_URL
+      BACKEND_URL,
+      'https://jovial-buttercream-2bcd30.netlify.app',
+      'https://vhass-server-1.onrender.com'
     ];
     
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // Log the origin for debugging
+    console.log('Request origin:', origin);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
+      console.log('CORS blocked for origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'token', 'Token', 'Accept', 'Origin', 'X-Requested-With'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'token', 'Token', 'Accept', 'Origin', 'X-Requested-With', 'Cookie'],
   exposedHeaders: ['Set-Cookie'],
   preflightContinue: false,
   optionsSuccessStatus: 204
@@ -73,14 +79,15 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    mongoUrl: process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
     ttl: 24 * 60 * 60 // 1 day
   }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
     sameSite: 'lax',
-    maxAge: 24 * 60 * 60 * 1000 // 1 day
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
   }
 }));
 

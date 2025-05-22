@@ -16,6 +16,22 @@ console.log('Server URL:', server);
 axios.defaults.baseURL = server;
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
+axios.defaults.headers.common['Accept'] = 'application/json';
+
+// Add response interceptor for debugging
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    console.error('Axios Error:', {
+      url: error.config?.url,
+      method: error.config?.method,
+      status: error.response?.status,
+      data: error.response?.data,
+      headers: error.config?.headers
+    });
+    return Promise.reject(error);
+  }
+);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

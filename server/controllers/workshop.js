@@ -157,14 +157,14 @@ export const deleteWorkshop = TryCatch(async (req, res) => {
 
 export const phonepeCheckout = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
-    const workshop = await Workshop.findById(req.params.id);
+  const user = await User.findById(req.user._id);
+  const workshop = await Workshop.findById(req.params.id);
     if (!user || !workshop) {
       return res.status(404).json({ message: 'User or workshop not found' });
     }
-    if (user.workshopSubscription.includes(workshop._id)) {
+  if (user.workshopSubscription.includes(workshop._id)) {
       return res.status(400).json({ message: 'You already have this workshop' });
-    }
+  }
     const merchantOrderId = randomUUID();
     const amount = Math.round(Number(workshop.price) * 100); // in paise
     const redirectUrl = `http://localhost:5173/payment-success/${workshop._id}`;
