@@ -176,8 +176,6 @@ mongoose.connect("mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mon
   tlsAllowInvalidHostnames: true,
   retryWrites: true,
   w: 'majority',
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   maxPoolSize: 10,
   minPoolSize: 5,
   socketTimeoutMS: 45000,
