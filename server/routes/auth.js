@@ -5,6 +5,11 @@ import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
+// Get the frontend URL based on environment
+const getFrontendUrl = () => {
+  return process.env.FRONTEND_URL || 'http://localhost:3000';
+};
+
 // Debug middleware to log requests
 router.use((req, res, next) => {
   console.log('Auth Route:', req.method, req.path);
@@ -36,10 +41,29 @@ router.get('/google/callback',
     try {
       console.log('Google authentication successful, setting session...');
       req.session.user = req.user;
-      res.redirect('http://localhost:3000/');
+      
+      // Generate JWT token
+      const token = jwt.sign(
+        { id: req.user._id },
+        process.env.JWT_SECRET || 'your-secret-key',
+        { expiresIn: '7d' }
+      );
+
+      // Set the token in a cookie
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
+
+      // Redirect to frontend with success
+      const frontendUrl = getFrontendUrl();
+      res.redirect(`${frontendUrl}/?auth=success`);
     } catch (error) {
       console.error('Error in Google callback:', error);
-      res.redirect('http://localhost:3000/login?error=auth_failed');
+      const frontendUrl = getFrontendUrl();
+      res.redirect(`${frontendUrl}/login?error=auth_failed`);
     }
   }
 );
@@ -57,7 +81,7 @@ router.get('/verify-token', async (req, res) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
     const user = await User.findById(decoded.id).select('-password');
 
     if (!user) {
@@ -86,11 +110,18 @@ router.get('/verify-token', async (req, res) => {
 router.post('/logout', (req, res) => {
   try {
     console.log('Logging out user...');
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Error destroying session:', err);
+      }
+    });
+    
     res.clearCookie('token', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax'
     });
+    
     res.json({ 
       success: true, 
       message: 'Logged out successfully' 
