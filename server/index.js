@@ -6,7 +6,13 @@ import { dirname } from 'path';
 
 // Get the directory name
 console.log("PORT:", process.env.PORT);
-console.log("All ENV:", process.env);
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("FRONTEND_URL:", process.env.FRONTEND_URL);
+console.log("BACKEND_URL:", process.env.BACKEND_URL);
+console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID ? "Set" : "Not Set");
+console.log("GOOGLE_CLIENT_SECRET:", process.env.GOOGLE_CLIENT_SECRET ? "Set" : "Not Set");
+console.log("GOOGLE_CALLBACK_URL:", process.env.GOOGLE_CALLBACK_URL);
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -31,7 +37,8 @@ const app = express();
 
 // Debug middleware
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`);
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  console.log('Headers:', req.headers);
   next();
 });
 
@@ -59,6 +66,7 @@ app.use(cors({
     
     // Log the origin for debugging
     console.log('Request origin:', origin);
+    console.log('Allowed origins:', allowedOrigins);
     
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
@@ -153,12 +161,19 @@ console.log('Registered workshop routes:', workshopRoutes.stack.map(r => r.route
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    env: process.env.NODE_ENV,
+    frontendUrl: FRONTEND_URL,
+    backendUrl: BACKEND_URL
+  });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
+  console.error('Error stack:', err.stack);
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal server error',
