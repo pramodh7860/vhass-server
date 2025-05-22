@@ -6,10 +6,14 @@ import { UserContextProvider } from "./context/UserContext.jsx";
 import { CourseContextProvider } from "./context/CourseContext.jsx";
 import { WorkshopContextProvider } from "./context/WorkshopContext.jsx";
 
-// Set the server URL to production URL
-export const server = "https://vhass-server-1.onrender.com";
+// Set the server URL based on environment
+const isDevelopment = window.location.hostname === 'localhost';
+export const server = isDevelopment 
+  ? 'http://localhost:5001'
+  : 'https://vhass-server-1.onrender.com';
 
 // Log the server URL for debugging
+console.log('Environment:', isDevelopment ? 'Development' : 'Production');
 console.log('Server URL:', server);
 
 // Configure axios globally

@@ -47,10 +47,14 @@ app.use(cors({
     if (!origin) return callback(null, true);
     
     const allowedOrigins = [
+      // Production URLs
       FRONTEND_URL,
       BACKEND_URL,
       'https://jovial-buttercream-2bcd30.netlify.app',
-      'https://vhass-server-1.onrender.com'
+      'https://vhass-server-1.onrender.com',
+      // Development URLs
+      'http://localhost:3000',
+      'http://localhost:5001'
     ];
     
     // Log the origin for debugging
@@ -81,11 +85,11 @@ app.use(session({
     ttl: 24 * 60 * 60 // 1 day
   }),
   cookie: {
-    secure: true, // Always use secure cookies in production
+    secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
     httpOnly: true,
     sameSite: 'lax',
     maxAge: 24 * 60 * 60 * 1000, // 1 day
-    domain: '.onrender.com'
+    domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
   }
 }));
 
