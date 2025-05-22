@@ -7,7 +7,7 @@ import { CourseContextProvider } from "./context/CourseContext.jsx";
 import { WorkshopContextProvider } from "./context/WorkshopContext.jsx";
 
 // Set the server URL explicitly
-export const server = "https://vhass-server-1.onrender.com";
+export const server = "http://localhost:5001";
 
 // Log the server URL for debugging
 console.log('Server URL:', server);

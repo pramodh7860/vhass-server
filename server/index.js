@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Set frontend URL
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const FRONTEND_URL = 'http://localhost:3000';
 
 // Load environment variables manually (Windows and Unix compatible)
 
@@ -47,10 +47,8 @@ app.use(cors({
     
     const allowedOrigins = [
       'http://localhost:3000',
-      'http://localhost:5001',
-      'https://vhass-server-1.onrender.com',
-      process.env.FRONTEND_URL
-    ].filter(Boolean); // Remove undefined/null values
+      'http://localhost:5001'
+    ];
     
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
@@ -72,15 +70,14 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    mongoUrl: "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
     ttl: 24 * 60 * 60 // 1 day
   }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
-    domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
+    sameSite: 'lax',
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
 }));
 
@@ -167,7 +164,7 @@ app.use('/uploads', (req, res) => {
 });
 
 // Connect to MongoDB with official configuration
-mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+mongoose.connect("mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
   serverApi: {
     version: '1',
     strict: true,
@@ -179,6 +176,8 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pr
   tlsAllowInvalidHostnames: true,
   retryWrites: true,
   w: 'majority',
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
   maxPoolSize: 10,
   minPoolSize: 5,
   socketTimeoutMS: 45000,
@@ -193,7 +192,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pr
       console.log(`Server running on port ${PORT}`);
       console.log('Environment:', process.env.NODE_ENV || 'development');
       console.log('Frontend URL:', FRONTEND_URL);
-      console.log('Backend URL:', process.env.NODE_ENV === 'production' ? 'https://vhass-server-1.onrender.com' : `http://localhost:${PORT}`);
+      console.log('Backend URL:', `http://localhost:${PORT}`);
     });
   })
   .catch((error) => {
