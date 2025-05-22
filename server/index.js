@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Set frontend URL
-const FRONTEND_URL = 'http://localhost:3000';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 // Load environment variables manually (Windows and Unix compatible)
 
@@ -48,8 +48,9 @@ app.use(cors({
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:5001',
-      'https://vhass-server-1.onrender.com'
-    ];
+      'https://vhass-server-1.onrender.com',
+      process.env.FRONTEND_URL
+    ].filter(Boolean); // Remove undefined/null values
     
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
@@ -71,7 +72,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    mongoUrl: process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
     ttl: 24 * 60 * 60 // 1 day
   }),
   cookie: {
@@ -165,7 +166,7 @@ app.use('/uploads', (req, res) => {
 });
 
 // Connect to MongoDB with official configuration
-mongoose.connect("mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
   serverApi: {
     version: '1',
     strict: true,
@@ -191,7 +192,7 @@ mongoose.connect("mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mon
       console.log(`Server running on port ${PORT}`);
       console.log('Environment:', process.env.NODE_ENV || 'development');
       console.log('Frontend URL:', FRONTEND_URL);
-      console.log('Backend URL:', `http://localhost:${PORT}`);
+      console.log('Backend URL:', process.env.NODE_ENV === 'production' ? 'https://vhass-server-1.onrender.com' : `http://localhost:${PORT}`);
     });
   })
   .catch((error) => {
