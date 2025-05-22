@@ -10,8 +10,9 @@ console.log("All ENV:", process.env);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Set frontend URL
+// Set frontend and backend URLs
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://jovial-buttercream-2bcd30.netlify.app';
+const BACKEND_URL = process.env.BACKEND_URL || 'https://vhass-server-1.onrender.com';
 
 // Load environment variables manually (Windows and Unix compatible)
 
@@ -48,8 +49,8 @@ app.use(cors({
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:5001',
-      'https://jovial-buttercream-2bcd30.netlify.app',
-      'https://vhass-server-1.onrender.com'
+      FRONTEND_URL,
+      BACKEND_URL
     ];
     
     if (allowedOrigins.indexOf(origin) !== -1) {
@@ -192,7 +193,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pr
       console.log(`Server running on port ${PORT}`);
       console.log('Environment:', process.env.NODE_ENV || 'development');
       console.log('Frontend URL:', process.env.FRONTEND_URL || FRONTEND_URL);
-      console.log('Backend URL:', `http://localhost:${PORT}`);
+      console.log('Backend URL:', process.env.BACKEND_URL || BACKEND_URL);
     });
   })
   .catch((error) => {
