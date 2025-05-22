@@ -47,8 +47,6 @@ app.use(cors({
     if (!origin) return callback(null, true);
     
     const allowedOrigins = [
-      'http://localhost:3000',
-      'http://localhost:5001',
       FRONTEND_URL,
       BACKEND_URL,
       'https://jovial-buttercream-2bcd30.netlify.app',
@@ -83,11 +81,11 @@ app.use(session({
     ttl: 24 * 60 * 60 // 1 day
   }),
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: true, // Always use secure cookies in production
     httpOnly: true,
     sameSite: 'lax',
     maxAge: 24 * 60 * 60 * 1000, // 1 day
-    domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
+    domain: '.onrender.com'
   }
 }));
 
