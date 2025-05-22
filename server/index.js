@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Set frontend URL
-const FRONTEND_URL = 'http://localhost:3000';
+const FRONTEND_URL = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:3000';
 
 // Load environment variables manually (Windows and Unix compatible)
 
@@ -47,8 +47,9 @@ app.use(cors({
     
     const allowedOrigins = [
       'http://localhost:3000',
-      'http://localhost:5001'
-    ];
+      'http://localhost:5001',
+      process.env.FRONTEND_URL
+    ].filter(Boolean);
     
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
@@ -88,7 +89,7 @@ app.use(passport.session());
 // Global OPTIONS handler for CORS preflight
 app.options('*', cors());
 
-const port = 5001;
+const port = process.env.PORT || 5001;
 
 app.get("/", (req, res) => {
   res.send("Server is working");
@@ -116,6 +117,10 @@ app.get("/uploads/check/:filename", (req, res) => {
     filename
   });
 });
+
+// Serve static files from the frontend build directory
+const frontendBuildPath = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendBuildPath));
 
 // importing routes
 import userRoutes from "./routes/user.js";
@@ -163,6 +168,11 @@ app.use('/uploads', (req, res) => {
   });
 });
 
+// Catch-all route to serve the frontend
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendBuildPath, 'index.html'));
+});
+
 // Connect to MongoDB with official configuration
 mongoose.connect("mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
   serverApi: {
@@ -187,12 +197,11 @@ mongoose.connect("mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mon
   .then(() => {
     console.log('Connected to MongoDB');
     // Start server only after DB connection
-    const PORT = process.env.PORT || 5001;
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
       console.log('Environment:', process.env.NODE_ENV || 'development');
       console.log('Frontend URL:', FRONTEND_URL);
-      console.log('Backend URL:', `http://localhost:${PORT}`);
+      console.log('Backend URL:', `http://localhost:${port}`);
     });
   })
   .catch((error) => {
