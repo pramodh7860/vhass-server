@@ -19,6 +19,7 @@ axios.defaults.baseURL = server;
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Accept'] = 'application/json';
+axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true;
 
 // Add response interceptor for debugging
 axios.interceptors.response.use(
@@ -29,7 +30,8 @@ axios.interceptors.response.use(
       method: error.config?.method,
       status: error.response?.status,
       data: error.response?.data,
-      headers: error.config?.headers
+      headers: error.config?.headers,
+      cookies: document.cookie
     });
     return Promise.reject(error);
   }

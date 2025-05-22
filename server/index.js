@@ -95,9 +95,10 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: 'none', // Allow cross-site cookies
     maxAge: 24 * 60 * 60 * 1000, // 1 day
-    domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
+    domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
+    path: '/'
   }
 }));
 
