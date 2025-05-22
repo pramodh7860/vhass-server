@@ -25,3 +25,26 @@ body {
     font-size: 16px;
   }
 }
+
+@media (max-width: 768px) {
+  .grid-2 {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    padding: 0 !important;
+  }
+  .grid-2 > div {
+    width: 100% !important;
+    box-sizing: border-box;
+    padding: 10px 0 !important;
+    margin: 0 !important;
+  }
+  .grid-2 figure {
+    margin: 0 auto 10px;
+    max-width: 150px;
+  }
+  .grid-2 figure img {
+    width: 100%;
+    height: auto;
+  }
+}

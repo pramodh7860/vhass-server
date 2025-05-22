@@ -6,10 +6,12 @@ import CourseCard from "../../components/coursecard/CourseCard";
 const Courses = () => {
   const { courses } = CourseData();
 
-  console.log(courses);
   return (
     <div className="courses">
-      <h2>Available Courses</h2>
+      <div className="section-header">
+        <h2>Explore Our Courses</h2>
+        <p>Learn from industry experts and gain hands-on experience with our comprehensive cybersecurity courses</p>
+      </div>
 
       <div className="course-container">
         {courses && courses.length > 0 ? (

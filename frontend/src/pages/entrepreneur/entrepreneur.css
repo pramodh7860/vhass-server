@@ -4,17 +4,24 @@
     color: white;
     padding: 80px 20px;
     text-align: center;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .entrepreneur-hero h1 {
     font-size: 3rem;
     margin-bottom: 20px;
+    line-height: 1.2;
 }
 
 .entrepreneur-hero p {
     font-size: 1.2rem;
     max-width: 800px;
     margin: 0 auto 30px;
+    line-height: 1.6;
 }
 
 .program-highlights {
@@ -23,6 +30,8 @@
     justify-content: center;
     gap: 30px;
     padding: 60px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .highlight-card {
@@ -32,6 +41,7 @@
     padding: 30px;
     width: 300px;
     transition: transform 0.3s ease;
+    flex: 1 1 300px;
 }
 
 .highlight-card:hover {
@@ -47,31 +57,12 @@
 .highlight-card h3 {
     color: #1e3c72;
     margin-bottom: 15px;
+    font-size: 1.5rem;
 }
 
-.success-stories {
-    background: #f9f9f9;
-    padding: 60px 20px;
-    text-align: center;
-}
-
-.story-card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    padding: 30px;
-    max-width: 800px;
-    margin: 30px auto;
-    text-align: left;
-}
-
-.story-card img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    float: left;
-    margin-right: 20px;
+.highlight-card p {
+    color: #666;
+    line-height: 1.6;
 }
 
 .cta-section {
@@ -83,18 +74,26 @@
 
 .cta-buttons {
     margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-primary, .btn-outline {
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    text-align: center;
 }
 
 .btn-primary {
     background: white;
     color: #2a5298;
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-weight: bold;
-    text-decoration: none;
-    margin: 0 10px;
-    display: inline-block;
-    transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
@@ -106,13 +105,6 @@
     background: transparent;
     color: white;
     border: 2px solid white;
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-weight: bold;
-    text-decoration: none;
-    margin: 0 10px;
-    display: inline-block;
-    transition: all 0.3s ease;
 }
 
 .btn-outline:hover {
@@ -120,6 +112,7 @@
     transform: translateY(-3px);
 }
 
+/* Program Structure Styles */
 .program-structure {
     padding: 60px 20px;
     max-width: 1000px;
@@ -129,6 +122,7 @@
 .timeline {
     position: relative;
     margin: 40px 0;
+    padding: 0;
 }
 
 .timeline::before {
@@ -151,10 +145,12 @@
 
 .timeline-item:nth-child(odd) {
     left: 0;
+    padding-right: 20px;
 }
 
 .timeline-item:nth-child(even) {
     left: 50%;
+    padding-left: 20px;
 }
 
 .timeline-content {
@@ -195,26 +191,182 @@
     margin-bottom: 10px;
 }
 
-@media (max-width: 768px) {
+/* Responsive Styles */
+@media (max-width: 1200px) {
+    .entrepreneur-hero {
+        padding: 60px 20px;
+    }
+
+    .program-highlights {
+        padding: 40px 20px;
+    }
+
+    .highlight-card {
+        flex: 1 1 250px;
+    }
+}
+
+@media (max-width: 992px) {
+    .entrepreneur-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .entrepreneur-hero p {
+        font-size: 1.1rem;
+        padding: 0 20px;
+    }
+
+    .highlight-card {
+        flex: 1 1 220px;
+        padding: 20px;
+    }
+
+    .highlight-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .program-structure {
+        padding: 40px 20px;
+    }
+
     .timeline::before {
         left: 30px;
     }
-    
+
     .timeline-item {
         width: 100%;
         padding-left: 70px;
-        padding-right: 0;
+        padding-right: 20px;
     }
-    
+
     .timeline-item:nth-child(even) {
         left: 0;
     }
-    
+
     .timeline-item:nth-child(odd) .timeline-content::after,
     .timeline-item:nth-child(even) .timeline-content::after {
         left: -10px;
         right: auto;
         border-right: 10px solid white;
         border-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .entrepreneur-hero {
+        padding: 40px 15px;
+        min-height: 50vh;
+    }
+
+    .entrepreneur-hero h1 {
+        font-size: 2rem;
+    }
+
+    .entrepreneur-hero p {
+        font-size: 1rem;
+    }
+
+    .program-highlights {
+        gap: 20px;
+        padding: 30px 15px;
+    }
+
+    .highlight-card {
+        flex: 1 1 100%;
+        max-width: 400px;
+    }
+
+    .cta-section {
+        padding: 40px 15px;
+    }
+
+    .btn-primary, .btn-outline {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .program-structure {
+        padding: 30px 15px;
+    }
+
+    .timeline::before {
+        left: 20px;
+    }
+
+    .timeline-item {
+        padding-left: 50px;
+        padding-right: 15px;
+    }
+
+    .timeline-content {
+        padding: 15px;
+    }
+
+    .timeline-date {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .entrepreneur-hero {
+        padding: 30px 10px;
+    }
+
+    .entrepreneur-hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .entrepreneur-hero p {
+        font-size: 0.9rem;
+        padding: 0 10px;
+    }
+
+    .program-highlights {
+        padding: 20px 10px;
+        gap: 15px;
+    }
+
+    .highlight-card {
+        padding: 15px;
+    }
+
+    .highlight-card i {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+
+    .highlight-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .cta-section {
+        padding: 30px 10px;
+    }
+
+    .btn-primary, .btn-outline {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    .program-structure {
+        padding: 20px 10px;
+    }
+
+    .timeline::before {
+        left: 15px;
+    }
+
+    .timeline-item {
+        padding-left: 40px;
+        padding-right: 10px;
+    }
+
+    .timeline-content {
+        padding: 12px;
+    }
+
+    .timeline-date {
+        font-size: 0.8rem;
     }
 }

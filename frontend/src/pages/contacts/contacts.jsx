@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import "./contacts.css";
 import { FaSearch, FaChevronDown, FaChevronUp, FaEnvelope, FaPhone } from 'react-icons/fa';
+import Swal from 'sweetalert2'
 
 const Contacts = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -26,7 +27,7 @@ const Contacts = () => {
     },
     {
       question: "What are the payment options?",
-      answer: "We accept various payment methods including credit/debit cards, net banking, and EMI options.",
+      answer: "We accept various payment methods including credit/debit cards, net banking.",
       category: "Payment"
     }
   ];
@@ -46,6 +47,33 @@ const Contacts = () => {
   const toggleFaq = (index) => {
     setOpenFaqId(openFaqId === index ? null : index);
   };
+
+  const onSubmit = async (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+  
+      formData.append("access_key", "3833aaac-9a8b-4b49-91ed-0b175bfffa2c");
+  
+      const object = Object.fromEntries(formData);
+      const json = JSON.stringify(object);
+  
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: json
+      }).then((res) => res.json());
+  
+      if (res.success) {
+        Swal.fire({
+          title: "Success!",
+          text: "Message sent Successfully",
+          icon: "success"
+        });
+      }
+    };
   
   return (
     <div className="bg-gray-50 py-16">
@@ -147,17 +175,17 @@ const Contacts = () => {
               <div className="space-y-4">
                 <div className="flex items-center">
                   <FaEnvelope className="mr-3" />
-                  <span>vhass0310@gmail.com</span>
+                  <span>info@vhass.in</span>
                 </div>
                 <div className="flex items-center">
                   <FaPhone className="mr-3" />
-                  <span>+91 9182890236</span>
+                  <span>+91 8985320226</span>
                 </div>
               </div>
             </div>
             <div className="md:w-1/2 p-8">
               <h2 className="text-2xl font-bold mb-4">Send us a message</h2>
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={onSubmit}>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Name
@@ -165,6 +193,7 @@ const Contacts = () => {
                   <input
                     type="text"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    name="name"
                     placeholder="Your name"
                   />
                 </div>
@@ -173,8 +202,9 @@ const Contacts = () => {
                     Email
                   </label>
                   <input
-                    type="email"
+                    type='email'
                     className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    name='email'
                     placeholder="Your email"
                   />
                 </div>
@@ -185,6 +215,7 @@ const Contacts = () => {
                   <textarea
                     className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     rows={4}
+                    name='message'
                     placeholder="Your question"
                   />
                 </div>

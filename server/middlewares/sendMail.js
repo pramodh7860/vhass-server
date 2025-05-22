@@ -1,6 +1,7 @@
 import { createTransport } from "nodemailer";
 
 const sendMail = async (email, subject, data) => {
+  console.log("Setting up email transport");
   const transport = createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -10,6 +11,7 @@ const sendMail = async (email, subject, data) => {
     },
   });
 
+  console.log("Email transport configured");
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,12 +59,19 @@ const sendMail = async (email, subject, data) => {
 </html>
 `;
 
-  await transport.sendMail({
-    from: process.env.Gmail,
-    to: email,
-    subject,
-    html,
-  });
+  try {
+    console.log("Sending email to:", email);
+    await transport.sendMail({
+      from: process.env.Gmail,
+      to: email,
+      subject,
+      html,
+    });
+    console.log("Email sent successfully to:", email);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw error;
+  }
 };
 
 export default sendMail;
@@ -134,7 +143,7 @@ export const sendForgotMail = async (subject, data) => {
     <p>If you did not request this, please ignore this email.</p>
     <div class="footer">
       <p>Thank you,<br>Your Website Team</p>
-      <p><a href="https://yourwebsite.com">yourwebsite.com</a></p>
+      <p><a href="https://vhass.in">vhass.in</a></p>
     </div>
   </div>
 </body>

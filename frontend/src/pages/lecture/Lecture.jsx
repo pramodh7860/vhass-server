@@ -28,7 +28,7 @@ const Lecture = ({ user }) => {
     try {
       const { data } = await axios.get(`${server}/api/lectures/${params.id}`, {
         headers: {
-          token: localStorage.getItem("token"),
+          'Authorization': `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setLectures(data.lectures);
@@ -44,7 +44,7 @@ const Lecture = ({ user }) => {
     try {
       const { data } = await axios.get(`${server}/api/lecture/${id}`, {
         headers: {
-          token: localStorage.getItem("token"),
+          'Authorization': `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setLecture(data.lecture);
@@ -82,7 +82,7 @@ const Lecture = ({ user }) => {
         myForm,
         {
           headers: {
-            token: localStorage.getItem("token"),
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -106,7 +106,7 @@ const Lecture = ({ user }) => {
       try {
         const { data } = await axios.delete(`${server}/api/lecture/${id}`, {
           headers: {
-            token: localStorage.getItem("token"),
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
           },
         });
 
@@ -129,7 +129,7 @@ const Lecture = ({ user }) => {
         `${server}/api/user/progress?course=${params.id}`,
         {
           headers: {
-            token: localStorage.getItem("token"),
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -150,7 +150,7 @@ const Lecture = ({ user }) => {
         {},
         {
           headers: {
-            token: localStorage.getItem("token"),
+            'Authorization': `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );

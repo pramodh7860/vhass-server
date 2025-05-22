@@ -3,6 +3,8 @@ import "./auth.css";
 import { Link, useNavigate } from "react-router-dom";
 import { UserData } from "../../context/UserContext";
 import { CourseData } from "../../context/CourseContext";
+import { FcGoogle } from "react-icons/fc";
+import { server } from "../../main";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,10 +18,26 @@ const Login = () => {
     e.preventDefault();
     await loginUser(email, password, navigate, fetchMyCourse);
   };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${server}/api/auth/google`;
+  };
+
   return (
     <div className="auth-page">
       <div className="auth-form">
         <h2>Login</h2>
+        <button 
+          onClick={handleGoogleLogin} 
+          className="google-btn"
+          type="button"
+        >
+          <FcGoogle size={20} />
+          Sign in with Google
+        </button>
+        
+        <div className="divider-text">or</div>
+
         <form onSubmit={submitHandler}>
           <label htmlFor="email">Email</label>
           <input

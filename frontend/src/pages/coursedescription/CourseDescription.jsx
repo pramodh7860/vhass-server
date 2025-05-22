@@ -8,125 +8,140 @@ import toast from "react-hot-toast";
 import { UserData } from "../../context/UserContext";
 import Loading from "../../components/loading/Loading";
 
-const CourseDescription = ({ user }) => {
+const CourseDescription = () => {
   const params = useParams();
   const navigate = useNavigate();
-
+  const { course, fetchCourse } = CourseData();
+  const { isAuth, user } = UserData();
   const [loading, setLoading] = useState(false);
-
-  const { fetchUser } = UserData();
-
-  const { fetchCourse, course, fetchCourses, fetchMyCourse } = CourseData();
 
   useEffect(() => {
     fetchCourse(params.id);
   }, []);
 
-  const checkoutHandler = async () => {
-    const token = localStorage.getItem("token");
+  const handlePayment = async () => {
+    if (!isAuth) {
+      toast.error("Please login to purchase the course");
+      navigate("/login", { state: { from: `/course/${params.id}` } });
+      return;
+    }
+
     setLoading(true);
-
-    const {
-      data: { order },
-    } = await axios.post(
-      `${server}/api/course/checkout/${params.id}`,
-      {},
-      {
-        headers: {
-          token,
-        },
-      }
-    );
-
-    const options = {
-      key: "rzp_test_yOMeMyaj2wlvTt", // Enter the Key ID generated from the Dashboard
-      amount: order.id, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-      currency: "INR",
-      name: "Vhass", //your business name
-      description: "Learn with us",
-      order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-
-      handler: async function (response) {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-          response;
-
-        try {
-          const { data } = await axios.post(
-            `${server}/api/verification/${params.id}`,
-            {
-              razorpay_order_id,
-              razorpay_payment_id,
-              razorpay_signature,
-            },
-            {
-              headers: {
-                token,
-              },
-            }
-          );
-
-          await fetchUser();
-          await fetchCourses();
-          await fetchMyCourse();
-          toast.success(data.message);
-          setLoading(false);
-          navigate(`/payment-success/${razorpay_payment_id}`);
-        } catch (error) {
-          toast.error(error.response.data.message);
-          setLoading(false);
+    try {
+      console.log('Initiating payment for course:', params.id);
+      const { data } = await axios.post(
+        `${server}/api/course/phonepe/checkout/${params.id}`,
+        {},
+        { 
+          headers: { 
+            'Content-Type': 'application/json',
+            'token': localStorage.getItem("token") 
+          }
         }
-      },
-      theme: {
-        color: "#8a4baf",
-      },
-    };
-    const razorpay = new window.Razorpay(options);
+      );
 
-    razorpay.open();
+      console.log('Payment response:', data);
+
+      if (data.checkoutPageUrl) {
+        window.location.href = data.checkoutPageUrl;
+      } else {
+        throw new Error("Payment URL not received");
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      console.error("Error response:", error.response?.data);
+      
+      let errorMessage = "Payment failed";
+      if (error.response?.data) {
+        if (error.response.data.error) {
+          errorMessage = error.response.data.error;
+        } else if (error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+      }
+      
+      toast.error(errorMessage);
+      setLoading(false);
+    }
   };
 
+  if (loading) return <Loading />;
+  if (!course) return <div className="error-message">Course not found</div>;
+
+  console.log('Course object in CourseDescription:', course);
+
   return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          {course && (
-            <div className="course-description">
-              <div className="course-header">
-                <img
-                  src={`${server}/${course.image}`}
-                  alt=""
-                  className="course-image"
-                />
-                <div className="course-info">
-                  <h2>{course.title}</h2>
-                  <p>Instructor: {course.createdBy}</p>
-                  <p>Duration: {course.duration} weeks</p>
-                </div>
-              </div>
+    <div className="course-description">
+      <div className="course-header">
+        <h1>{course.title}</h1>
+        <img src={course.image} alt={course.title} />
+      </div>
 
-              <p>{course.description}</p>
+      <div className="course-meta">
+        <span>Instructor: {course.createdBy}</span>
+        <span>Duration: {course.duration} hours</span>
+        <span>₹{course.price ?? 'N/A'}</span>
+      </div>
 
-              <p>Let's get started with course At ₹{course.price}</p>
+      <div className="course-content">
+        <h2>About This Course</h2>
+        <p>{course.description}</p>
 
-              {user && user.subscription.includes(course._id) ? (
-                <button
-                  onClick={() => navigate(`/course/study/${course._id}`)}
-                  className="common-btn"
-                >
-                  Study
-                </button>
-              ) : (
-                <button onClick={checkoutHandler} className="common-btn">
-                  Buy Now
-                </button>
-              )}
-            </div>
-          )}
-        </>
-      )}
-    </>
+        {course.syllabus && course.syllabus.length > 0 && (
+          <div className="syllabus-section">
+            <h2>Course Syllabus</h2>
+            <ul>
+              {course.syllabus.map((mod, idx) => (
+                <li key={idx}>{mod}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {course.whoShouldAttend && course.whoShouldAttend.length > 0 && (
+          <div className="who-should-attend-section">
+            <h2>Who Should Attend</h2>
+            <ul>
+              {course.whoShouldAttend.map((item, idx) => (
+                <li key={idx}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {course.prerequisites && course.prerequisites.length > 0 && (
+          <div className="prerequisites-section">
+            <h2>Prerequisites</h2>
+            <ul>
+              {course.prerequisites.map((item, idx) => (
+                <li key={idx}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        
+      </div>
+
+      <div className="action-buttons">
+        {isAuth && user?.subscription?.includes(course._id) ? (
+          <button 
+            onClick={() => navigate(`/course/study/${course._id}`)}
+            className="study-btn"
+          >
+            Continue Learning
+          </button>
+        ) : (
+          <button 
+            onClick={handlePayment} 
+            className="enroll-btn"
+            disabled={loading}
+          >
+            {loading ? "Processing..." : isAuth ? "Enroll Now" : "Login to Enroll"}
+          </button>
+        )}
+      </div>
+    </div>
   );
 };
 

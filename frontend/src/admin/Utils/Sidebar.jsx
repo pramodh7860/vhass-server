@@ -2,7 +2,7 @@ import React from "react";
 import "./common.css";
 import { Link } from "react-router-dom";
 import { AiFillHome, AiOutlineLogout } from "react-icons/ai";
-import { FaBook, FaUserAlt } from "react-icons/fa";
+import { FaBook, FaUserAlt, FaChalkboardTeacher } from "react-icons/fa";
 import { UserData } from "../../context/UserContext";
 
 const Sidebar = () => {
@@ -25,6 +25,15 @@ const Sidebar = () => {
               <FaBook />
             </div>
             <span>Courses</span>
+          </Link>
+        </li>
+
+        <li>
+          <Link to={"/admin/workshop"}>
+            <div className="icon">
+              <FaChalkboardTeacher />
+            </div>
+            <span>Workshops</span>
           </Link>
         </li>
 

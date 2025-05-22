@@ -1,19 +1,19 @@
 import mongoose from "mongoose";
 
 const schema = new mongoose.Schema({
-  razorpay_order_id: {
+  // Placeholder for PhonePe payment details
+  phonepe_payment_id: {
     type: String,
-    required: true,
+    required: false,
   },
-  razorpay_payment_id: {
+  phonepe_order_id: {
     type: String,
-    required: true,
+    required: false,
   },
-  razorpay_signature: {
+  phonepe_signature: {
     type: String,
-    required: true,
+    required: false,
   },
-
   createdAt: {
     type: Date,
     default: Date.now,

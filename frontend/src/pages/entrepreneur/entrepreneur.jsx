@@ -1,6 +1,7 @@
 import React from "react";
 import "./entrepreneur.css";
 import { FaLightbulb, FaChartLine, FaNetworkWired, FaHandshake } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Entrepreneur = () => {
   return (
@@ -89,33 +90,13 @@ const Entrepreneur = () => {
         </div>
       </section>
 
-      {/* Success Stories */}
-      <section className="success-stories">
-        <h2 style={{ color: '#1e3c72', marginBottom: '20px' }}>Success Stories</h2>
-        <p>Hear from our alumni who turned their expertise into thriving businesses</p>
-        
-        <div className="story-card">
-          <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Sarah Johnson" />
-          <h3>Priya Sharma</h3>
-          <p><em>Founder, SecureSphere Consulting</em></p>
-          <p>"The VHASS entrepreneur program gave me the tools and confidence to launch my cybersecurity consulting firm. Within a year, we've grown to serve 15 clients and have a team of 5 security professionals."</p>
-        </div>
-        
-        <div className="story-card">
-          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Raj Patel" />
-          <h3>Raj Patel</h3>
-          <p><em>CEO, ThreatGuard Solutions</em></p>
-          <p>"Through the program, I connected with investors who believed in my vision for an AI-powered threat detection platform. We've now secured $2M in seed funding and are protecting businesses across India."</p>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="cta-section" id="apply">
-        <h2>Ready to Launch Your Cybersecurity Venture?</h2>
+        <h2>Ready to Launch Your Venture?</h2>
         <p>Applications for our next cohort are now open. Limited spots available.</p>
         
         <div className="cta-buttons">
-          <a href="/login" className="btn-primary">Apply Now</a>
+          <a href="/courses" className="btn-primary">Apply Now</a>
           <a href="/courses" className="btn-outline">Program Details</a>
         </div>
       </section>

@@ -1,0 +1,259 @@
+.landing-page {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background-color: black;
+    color: #e7e7e7;
+}
+
+.landing-page * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.landing-page .image-gradient {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0.5;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.landing-page .layer-blur {
+    height: 0;
+    width: 30rem;
+    position: absolute;
+    top: 20%;
+    right: 0;
+    box-shadow: 0 0 700px 15px white;
+    rotate: -30deg;
+    z-index: -1;
+}
+
+.landing-page .container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.landing-page .content {
+    max-width: 35rem;
+    margin-left: 5%;
+    z-index: 999;
+    margin-top: 10%;
+    padding-right: 2rem;
+}
+
+.landing-page .tag-box {
+    position: relative;
+    width: 18rem;
+    height: 2.5rem;
+    border-radius: 50px;
+    background: linear-gradient(to right, #656565, #7f42a7, #6600c5, #5300a0, #757575, #656565);
+    background-size: 200%;
+    animation: landing-page-animationGradient 2.5s linear infinite;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes landing-page-animationGradient {
+    to {
+        background-position: 200%;
+    }
+}
+
+.landing-page .tag-box .tag {
+    position: absolute;
+    inset: 3px 3px 3px 3px;
+    background-color: black;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s ease;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+}
+
+.landing-page .tag-box .tag:hover {
+    color: #5300a0;
+}
+
+.landing-page .content h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin: 2rem 0;
+    line-height: 1.2;
+    text-shadow: 0 0 10px rgba(128, 128, 128, 0.452);
+    background: linear-gradient(45deg, #fff, #7f42a7);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.landing-page .description {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.landing-page .buttons {
+    margin-top: 2rem;
+}
+
+.landing-page .btn-signing-main {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(45deg, #7f42a7, #5300a0);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(127, 66, 167, 0.3);
+}
+
+.landing-page .btn-signing-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(127, 66, 167, 0.5);
+}
+
+.landing-page .robot-3d {
+    position: absolute;
+    top: 0;
+    right: -10%;
+    width: 65%;
+    height: 100vh;
+    z-index: 1;
+    overflow: visible;
+}
+
+.landing-page .robot-3d canvas {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+}
+
+/* Allow clicks to pass through decorative elements */
+.landing-page .image-gradient,
+.landing-page .layer-blur,
+.landing-page .robot-3d {
+    pointer-events: none;
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+    .landing-page .content {
+        max-width: 30rem;
+        margin-left: 3%;
+    }
+
+    .landing-page .robot-3d {
+        width: 70%;
+        right: -15%;
+    }
+}
+
+@media (max-width: 992px) {
+    .landing-page .content {
+        max-width: 25rem;
+        margin-left: 2%;
+    }
+
+    .landing-page .content h1 {
+        font-size: 3rem;
+    }
+
+    .landing-page .description {
+        font-size: 1.1rem;
+    }
+
+    .landing-page .robot-3d {
+        width: 75%;
+        right: -20%;
+    }
+}
+
+@media (max-width: 768px) {
+    .landing-page .container {
+        flex-direction: column;
+        padding: 0 1.5rem;
+    }
+
+    .landing-page .content {
+        max-width: 100%;
+        margin: 5rem auto 2rem; /* Changed from margin-left: 5% to auto */
+        padding-right: 0;
+        text-align: center;
+    }
+
+    .landing-page .tag-box {
+        margin: 0 auto;
+    }
+
+    .landing-page .content h1 {
+        font-size: 2.5rem;
+    }
+
+    .landing-page .description {
+        font-size: 1rem;
+    }
+
+    .landing-page .robot-3d {
+        position: relative;
+        width: 100%;
+        height: 50vh;
+        right: 0;
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .landing-page .container {
+        padding: 0 1rem;
+    }
+
+    .landing-page .content {
+        margin: 3rem auto 1.5rem; /* Ensures horizontal centering */
+        padding: 0 1rem; /* Adds slight padding for better readability */
+        text-align: center; /* Ensures text is centered */
+    }
+
+    .landing-page .tag-box {
+        width: 15rem;
+        margin: 0 auto; /* Centers the tag box */
+    }
+
+    .landing-page .content h1 {
+        font-size: 2rem;
+        margin: 1.5rem 0; /* Adjusts spacing for mobile */
+    }
+
+    .landing-page .description {
+        font-size: 0.9rem;
+        text-align: center; /* Ensures text is centered */
+        padding: 0 0.5rem; /* Prevents text from touching edges */
+    }
+
+    .landing-page .btn-signing-main {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+        display: inline-block; /* Ensures button respects text-align */
+    }
+
+    .landing-page .robot-3d {
+        height: 40vh;
+    }
+}

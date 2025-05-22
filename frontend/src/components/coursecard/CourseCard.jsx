@@ -13,29 +13,44 @@ const CourseCard = ({ course }) => {
 
   const { fetchCourses } = CourseData();
 
+  console.log('Course data:', course);
+
   const deleteHandler = async (id) => {
     if (confirm("Are you sure you want to delete this course")) {
       try {
-        const { data } = await axios.delete(`${server}/api/course/${id}`, {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        });
+        console.log('Attempting to delete course with ID:', id);
+        console.log('Server URL:', server);
+        
+        const response = await axios.delete(`${server}/api/course/${id}`);
 
-        toast.success(data.message);
+        console.log('Delete response:', response);
+        
+        toast.success(response.data.message);
         fetchCourses();
       } catch (error) {
-        toast.error(error.response.data.message);
+        console.error('Delete error:', error);
+        console.error('Error details:', {
+          status: error.response?.status,
+          data: error.response?.data,
+          headers: error.response?.headers,
+          config: error.config
+        });
+        toast.error(error.response?.data?.message || 'Failed to delete course');
       }
     }
   };
+
+  const price = Number(course.price);
+
   return (
     <div className="course-card">
-      <img src={`${server}/${course.image}`} alt="" className="course-image" />
+      <img src={course.image || course.poster} alt={course.title} className="course-image" />
       <h3>{course.title}</h3>
       <p>Instructor- {course.createdBy}</p>
-      <p>Duration- {course.duration} weeks</p>
-      <p>Price- ₹{course.price}</p>
+      <p>Duration- {course.duration} Hours</p>
+      <div className="price-container">
+        <span>₹{course.originalPrice || course.price || "N/A"}</span>
+      </div>
       {isAuth ? (
         <>
           {user && user.role !== "admin" ? (
@@ -66,8 +81,8 @@ const CourseCard = ({ course }) => {
           )}
         </>
       ) : (
-        <button onClick={() => navigate("/login")} className="common-btn">
-          Get Started
+        <button onClick={() => navigate(`/course/${course._id}`)} className="common-btn">
+          View Details
         </button>
       )}
 

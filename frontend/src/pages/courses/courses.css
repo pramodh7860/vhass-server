@@ -16,3 +16,39 @@
     gap: 30px;
   }
 }
+
+/* Add these styles to your existing courses.css */
+
+.section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+.section-header h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #333; /* Adjust color to match your theme */
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: #666; /* Adjust color to match your theme */
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Existing styles... */
+.courses {
+  padding: 2rem;
+}
+
+.course-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+

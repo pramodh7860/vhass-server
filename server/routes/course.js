@@ -5,19 +5,29 @@ import {
   fetchLectures,
   fetchLecture,
   getMyCourses,
-  checkout,
-  paymentVerification,
+  phonepeCheckout,
+  phonepeStatus,
+  createCourse
 } from "../controllers/course.js";
-import { isAuth } from "../middlewares/isAuth.js";
+import { isAuth, isAdmin } from "../middlewares/isAuth.js";
+import { deleteCourse, addLectures } from "../controllers/admin.js";
+import { uploadFiles } from "../middlewares/multer.js";
 
 const router = express.Router();
 
 router.get("/course/all", getAllCourses);
+
+// Update lecture route to use uploadFiles middleware
+router.post("/course/:id", isAuth, isAdmin, uploadFiles.fields([{ name: 'file', maxCount: 1 }]), addLectures);
+router.post("/course/new", isAuth, isAdmin, createCourse);
+router.delete("/course/:id", isAuth, isAdmin, deleteCourse);
 router.get("/course/:id", getSingleCourse);
 router.get("/lectures/:id", isAuth, fetchLectures);
 router.get("/lecture/:id", isAuth, fetchLecture);
 router.get("/mycourse", isAuth, getMyCourses);
-router.post("/course/checkout/:id", isAuth, checkout);
-router.post("/verification/:id", isAuth, paymentVerification);
+
+// PhonePe payment endpoints
+router.post("/course/phonepe/checkout/:id", isAuth, phonepeCheckout);
+router.post("/course/phonepe/status/:transactionId", isAuth, phonepeStatus);
 
 export default router;

@@ -1,0 +1,125 @@
+.workshop-details {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.workshop-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.workshop-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.workshop-tagline {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.workshop-header img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.workshop-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 40px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.workshop-meta span {
+  font-size: 1rem;
+  color: #555;
+}
+
+.workshop-content {
+  line-height: 1.6;
+}
+
+.workshop-content h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin: 30px 0 20px;
+}
+
+.workshop-content p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.syllabus-section,
+.who-should-attend-section,
+.prerequisites-section,
+.workshop-instructions {
+  margin: 30px 0;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.syllabus-section h2,
+.who-should-attend-section h2,
+.prerequisites-section h2,
+.workshop-instructions h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.syllabus-section ul,
+.who-should-attend-section ul,
+.prerequisites-section ul,
+.workshop-instructions ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.syllabus-section li,
+.who-should-attend-section li,
+.prerequisites-section li,
+.workshop-instructions li {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.syllabus-section li:before,
+.who-should-attend-section li:before,
+.prerequisites-section li:before,
+.workshop-instructions li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #4CAF50;
+}
+
+.workshop-instructions {
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+}
+
+.workshop-instructions h2 {
+  color: #856404;
+}
+
+.workshop-instructions li {
+  color: #856404;
+}
+
+.workshop-instructions li:before {
+  color: #856404;
+} 

@@ -7,17 +7,14 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const Account = ({ user }) => {
-  const { setIsAuth, setUser } = UserData();
-
+  const { setIsAuth, setUser, logoutUser } = UserData();
   const navigate = useNavigate();
 
-  const logoutHandler = () => {
-    localStorage.clear();
-    setUser([]);
-    setIsAuth(false);
-    toast.success("Logged Out");
+  const handleLogout = async () => {
+    await logoutUser();
     navigate("/login");
   };
+
   return (
     <div>
       {user && (
@@ -55,7 +52,7 @@ const Account = ({ user }) => {
             <br />
 
             <button
-              onClick={logoutHandler}
+              onClick={handleLogout}
               className="common-btn"
               style={{ background: "red" }}
             >
