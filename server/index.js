@@ -164,7 +164,7 @@ app.use('/uploads', (req, res) => {
 });
 
 // Connect to MongoDB with official configuration
-mongoose.connect("mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
   serverApi: {
     version: '1',
     strict: true,
@@ -189,7 +189,7 @@ mongoose.connect("mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mon
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
       console.log('Environment:', process.env.NODE_ENV || 'development');
-      console.log('Frontend URL:', FRONTEND_URL);
+      console.log('Frontend URL:', process.env.FRONTEND_URL || FRONTEND_URL);
       console.log('Backend URL:', `http://localhost:${PORT}`);
     });
   })
@@ -202,6 +202,16 @@ mongoose.connect("mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mon
       errorLabels: error.errorLabels,
       stack: error.stack
     });
+    
+    // More detailed error logging
+    if (error.name === 'MongooseServerSelectionError') {
+      console.error('MongoDB Connection Error:');
+      console.error('1. Check if your IP address is whitelisted in MongoDB Atlas');
+      console.error('2. Verify your MongoDB connection string');
+      console.error('3. Ensure your MongoDB Atlas cluster is running');
+      console.error('4. Check if your MongoDB Atlas username and password are correct');
+    }
+    
     process.exit(1);
   });
 
