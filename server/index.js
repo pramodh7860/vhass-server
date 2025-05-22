@@ -6,19 +6,12 @@ import { dirname } from 'path';
 
 // Get the directory name
 console.log("PORT:", process.env.PORT);
-console.log("NODE_ENV:", process.env.NODE_ENV);
-console.log("FRONTEND_URL:", process.env.FRONTEND_URL);
-console.log("BACKEND_URL:", process.env.BACKEND_URL);
-console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID ? "Set" : "Not Set");
-console.log("GOOGLE_CLIENT_SECRET:", process.env.GOOGLE_CLIENT_SECRET ? "Set" : "Not Set");
-console.log("GOOGLE_CALLBACK_URL:", process.env.GOOGLE_CALLBACK_URL);
-
+console.log("All ENV:", process.env);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Set frontend and backend URLs
-const FRONTEND_URL = process.env.FRONTEND_URL || 'https://jovial-buttercream-2bcd30.netlify.app';
-const BACKEND_URL = process.env.BACKEND_URL || 'https://vhass-server-1.onrender.com';
+// Set frontend URL
+const FRONTEND_URL = 'http://localhost:3000';
 
 // Load environment variables manually (Windows and Unix compatible)
 
@@ -37,8 +30,7 @@ const app = express();
 
 // Debug middleware
 app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
-  console.log('Headers:', req.headers);
+  console.log(`${req.method} ${req.path}`);
   next();
 });
 
@@ -54,30 +46,19 @@ app.use(cors({
     if (!origin) return callback(null, true);
     
     const allowedOrigins = [
-      // Production URLs
-      FRONTEND_URL,
-      BACKEND_URL,
-      'https://jovial-buttercream-2bcd30.netlify.app',
-      'https://vhass-server-1.onrender.com',
-      // Development URLs
       'http://localhost:3000',
       'http://localhost:5001'
     ];
     
-    // Log the origin for debugging
-    console.log('Request origin:', origin);
-    console.log('Allowed origins:', allowedOrigins);
-    
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+    if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      console.log('CORS blocked for origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'token', 'Token', 'Accept', 'Origin', 'X-Requested-With', 'Cookie'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'token', 'Token', 'Accept', 'Origin', 'X-Requested-With'],
   exposedHeaders: ['Set-Cookie'],
   preflightContinue: false,
   optionsSuccessStatus: 204
@@ -89,16 +70,14 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    mongoUrl: "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
     ttl: 24 * 60 * 60 // 1 day
   }),
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
+    secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: 'none', // Allow cross-site cookies
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
-    domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
-    path: '/'
+    sameSite: 'lax',
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
 }));
 
@@ -162,19 +141,12 @@ console.log('Registered workshop routes:', workshopRoutes.stack.map(r => r.route
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    env: process.env.NODE_ENV,
-    frontendUrl: FRONTEND_URL,
-    backendUrl: BACKEND_URL
-  });
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
-  console.error('Error stack:', err.stack);
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal server error',
@@ -192,7 +164,7 @@ app.use('/uploads', (req, res) => {
 });
 
 // Connect to MongoDB with official configuration
-mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+mongoose.connect("mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
   serverApi: {
     version: '1',
     strict: true,
@@ -204,6 +176,8 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pr
   tlsAllowInvalidHostnames: true,
   retryWrites: true,
   w: 'majority',
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
   maxPoolSize: 10,
   minPoolSize: 5,
   socketTimeoutMS: 45000,
@@ -217,8 +191,8 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pr
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
       console.log('Environment:', process.env.NODE_ENV || 'development');
-      console.log('Frontend URL:', process.env.FRONTEND_URL || FRONTEND_URL);
-      console.log('Backend URL:', process.env.BACKEND_URL || BACKEND_URL);
+      console.log('Frontend URL:', FRONTEND_URL);
+      console.log('Backend URL:', `http://localhost:${PORT}`);
     });
   })
   .catch((error) => {
@@ -230,16 +204,6 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://pramodhkumar782006:pr
       errorLabels: error.errorLabels,
       stack: error.stack
     });
-    
-    // More detailed error logging
-    if (error.name === 'MongooseServerSelectionError') {
-      console.error('MongoDB Connection Error:');
-      console.error('1. Check if your IP address is whitelisted in MongoDB Atlas');
-      console.error('2. Verify your MongoDB connection string');
-      console.error('3. Ensure your MongoDB Atlas cluster is running');
-      console.error('4. Check if your MongoDB Atlas username and password are correct');
-    }
-    
     process.exit(1);
   });
 
