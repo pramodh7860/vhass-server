@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Set frontend URL
-const FRONTEND_URL = 'http://localhost:3000';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://jovial-buttercream-2bcd30.netlify.app';
 
 // Load environment variables manually (Windows and Unix compatible)
 
@@ -47,7 +47,8 @@ app.use(cors({
     
     const allowedOrigins = [
       'http://localhost:3000',
-      'http://localhost:5001'
+      'http://localhost:5001',
+      'https://jovial-buttercream-2bcd30.netlify.app'
     ];
     
     if (allowedOrigins.indexOf(origin) !== -1) {
