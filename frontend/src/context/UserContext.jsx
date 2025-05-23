@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { server } from "../main";
 import toast, { Toaster } from "react-hot-toast";
+import { defaultProfile } from '../assets';
 
 const UserContext = createContext();
 
@@ -14,26 +15,45 @@ export const UserContextProvider = ({ children }) => {
   async function loginUser(email, password, navigate, fetchMyCourse) {
     setBtnLoading(true);
     try {
-      const { data } = await axios.post(`${server}/api/user/login`, {
-        email,
-        password,
-      }, { 
-        withCredentials: true,
+      console.log('Attempting login...');
+      const response = await fetch('https://vhass-server-1.onrender.com/api/user/login', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include'
       });
+
+      console.log('Login response status:', response.status);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Login response:', data);
+
+      if (data.token) {
+        console.log('Token received, storing in localStorage');
+        localStorage.setItem('token', data.token);
+      } else {
+        console.error('No token in response');
+      }
 
       toast.success(data.message);
       await fetchUser();
       setBtnLoading(false);
       navigate("/");
-      fetchMyCourse();
+      if (fetchMyCourse) {
+        fetchMyCourse();
+      }
     } catch (error) {
+      console.error('Login error:', error);
       setBtnLoading(false);
       setIsAuth(false);
-      setUser([]);
-      toast.error(error.response?.data?.message || "Login failed");
+      setUser(null);
+      toast.error(error.message || "Login failed");
     }
   }
 
@@ -82,60 +102,91 @@ export const UserContextProvider = ({ children }) => {
 
   async function fetchUser() {
     try {
-      const { data } = await axios.get(`${server}/api/user/me`, { withCredentials: true });
-      setIsAuth(true);
-      setUser(data.user);
-      setLoading(false);
+      console.log('Fetching user...');
+      const token = localStorage.getItem('token');
+      console.log('Token from localStorage:', token ? 'exists' : 'not found');
+      
+      if (!token) {
+        console.log('No token found, setting auth state to false');
+        setIsAuth(false);
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch('https://vhass-server-1.onrender.com/api/user/me', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+
+      console.log('Response status:', response.status);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('User data received:', data);
+      
+      if (data.user) {
+        console.log('Setting auth state to true');
+        const formattedUser = {
+          ...data.user,
+          profileImage: data.user.profileImage 
+            ? `https://vhass-server-1.onrender.com/uploads/${data.user.profileImage}`
+            : defaultProfile
+        };
+        setIsAuth(true);
+        setUser(formattedUser);
+      } else {
+        console.log('No user data in response');
+        setIsAuth(false);
+        setUser(null);
+      }
     } catch (error) {
-      console.log(error);
+      console.error('Error fetching user:', error);
+      if (error.message.includes('401')) {
+        console.log('401 error, clearing token and auth state');
+        localStorage.removeItem('token');
+        setIsAuth(false);
+        setUser(null);
+      }
+    } finally {
       setLoading(false);
     }
   }
 
   async function logoutUser() {
     try {
-      await axios.post(`${server}/api/user/logout`, {}, { 
-        withCredentials: true 
+      console.log('Logging out...');
+      const token = localStorage.getItem('token');
+      
+      const response = await fetch('https://vhass-server-1.onrender.com/api/user/logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
       });
-      setUser([]);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      localStorage.removeItem('token');
+      setUser(null);
       setIsAuth(false);
       toast.success("Logged out successfully");
     } catch (error) {
       console.error("Logout error:", error);
-      setUser([]);
+      localStorage.removeItem('token');
+      setUser(null);
       setIsAuth(false);
-    }
-  }
-
-  async function loginUser(email, password, navigate, fetchMyCourse) {
-    setBtnLoading(true);
-    try {
-      const { data } = await axios.post(`${server}/api/user/login`, {
-        email,
-        password,
-      }, { 
-        withCredentials: true,  // Important for cookie-based auth
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-  
-      // Store token in localStorage
-      localStorage.setItem('token', data.token);
-      
-      // Set token in Axios default headers for future requests
-      axios.defaults.headers.common['token'] = data.token;
-  
-      toast.success(data.message);
-      await fetchUser();
-      setBtnLoading(false);
-      navigate("/");
-      fetchMyCourse();
-    } catch (error) {
-      setBtnLoading(false);
-      setIsAuth(false);
-      setUser([]);
-      toast.error(error.response?.data?.message || "Login failed");
     }
   }
 

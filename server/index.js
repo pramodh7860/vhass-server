@@ -51,19 +51,33 @@ app.use(cors({
       'https://helpful-kringle-b5cb93.netlify.app'
     ];
     
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
+      console.log('Blocked by CORS:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'token', 'Token', 'Accept', 'Origin', 'X-Requested-With'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'X-Requested-With', 
+    'Accept', 
+    'Origin',
+    'Access-Control-Allow-Origin',
+    'Access-Control-Allow-Headers',
+    'Access-Control-Allow-Methods',
+    'Access-Control-Allow-Credentials'
+  ],
   exposedHeaders: ['Set-Cookie'],
   preflightContinue: false,
   optionsSuccessStatus: 204
 }));
+
+// Global OPTIONS handler for CORS preflight
+app.options('*', cors());
 
 // Session configuration
 app.use(session({
@@ -71,13 +85,13 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: "mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    mongoUrl: process.env.MONGODB_URI,
     ttl: 24 * 60 * 60 // 1 day
   }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: 'none', // Required for cross-site cookies
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
 }));
@@ -85,9 +99,6 @@ app.use(session({
 // Initialize Passport and restore authentication state from session
 app.use(passport.initialize());
 app.use(passport.session());
-
-// Global OPTIONS handler for CORS preflight
-app.options('*', cors());
 
 const port = 5001;
 
@@ -145,9 +156,35 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Debug middleware for CORS and requests
+app.use((req, res, next) => {
+  console.log('Request:', {
+    method: req.method,
+    path: req.path,
+    origin: req.headers.origin,
+    headers: req.headers,
+    cookies: req.cookies
+  });
+  next();
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  console.error('Error:', {
+    message: err.message,
+    stack: err.stack,
+    origin: req.headers.origin,
+    path: req.path
+  });
+  
+  if (err.message === 'Not allowed by CORS') {
+    return res.status(403).json({
+      success: false,
+      message: 'CORS error: Request not allowed from this origin',
+      origin: req.headers.origin
+    });
+  }
+
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal server error',

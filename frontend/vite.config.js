@@ -14,11 +14,13 @@ export default defineConfig({
     sourcemap: true,
     minify: 'terser',
     chunkSizeWarningLimit: 1000,
+    assetsDir: 'assets',
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
         },
+        assetFileNames: 'assets/[name].[hash][extname]'
       },
     },
   },
