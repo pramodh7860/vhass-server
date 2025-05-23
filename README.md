@@ -49,14 +49,14 @@ MONGODB_URI=your_mongodb_uri
 SESSION_SECRET=your_session_secret
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
-GOOGLE_CALLBACK_URL=your_callback_url
+GOOGLE_CALLBACK_URL=https://vhass-server-1.onrender.com/api/auth/google/callback
 Gmail=your_gmail
 Password=your_gmail_app_password
 ```
 
 #### Frontend (.env)
 ```env
-VITE_API_URL=http://localhost:5001
+VITE_API_URL=https://vhass-server-1.onrender.com
 ```
 
 ### Installation
@@ -110,30 +110,30 @@ The application supports two authentication methods:
 ## 📚 API Endpoints
 
 ### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - User login
-- `GET /api/auth/google` - Google OAuth login
-- `GET /api/auth/google/callback` - Google OAuth callback
+- `POST https://vhass-server-1.onrender.com/api/auth/register` - Register new user
+- `POST https://vhass-server-1.onrender.com/api/auth/login` - User login
+- `GET https://vhass-server-1.onrender.com/api/auth/google` - Google OAuth login
+- `GET https://vhass-server-1.onrender.com/api/auth/google/callback` - Google OAuth callback
 
 ### User
-- `GET /api/user/profile` - Get user profile
-- `PUT /api/user/profile` - Update user profile
-- `POST /api/user/forgot-password` - Request password reset
-- `POST /api/user/reset-password` - Reset password
+- `GET https://vhass-server-1.onrender.com/api/user/profile` - Get user profile
+- `PUT https://vhass-server-1.onrender.com/api/user/profile` - Update user profile
+- `POST https://vhass-server-1.onrender.com/api/user/forgot-password` - Request password reset
+- `POST https://vhass-server-1.onrender.com/api/user/reset-password` - Reset password
 
 ### Courses
-- `GET /api/courses` - Get all courses
-- `GET /api/courses/:id` - Get single course
-- `POST /api/courses` - Create course (admin only)
-- `PUT /api/courses/:id` - Update course (admin only)
-- `DELETE /api/courses/:id` - Delete course (admin only)
+- `GET https://vhass-server-1.onrender.com/api/courses` - Get all courses
+- `GET https://vhass-server-1.onrender.com/api/courses/:id` - Get single course
+- `POST https://vhass-server-1.onrender.com/api/courses` - Create course (admin only)
+- `PUT https://vhass-server-1.onrender.com/api/courses/:id` - Update course (admin only)
+- `DELETE https://vhass-server-1.onrender.com/api/courses/:id` - Delete course (admin only)
 
 ### Workshops
-- `GET /api/workshops` - Get all workshops
-- `GET /api/workshops/:id` - Get single workshop
-- `POST /api/workshops` - Create workshop (admin only)
-- `PUT /api/workshops/:id` - Update workshop (admin only)
-- `DELETE /api/workshops/:id` - Delete workshop (admin only)
+- `GET https://vhass-server-1.onrender.com/api/workshops` - Get all workshops
+- `GET https://vhass-server-1.onrender.com/api/workshops/:id` - Get single workshop
+- `POST https://vhass-server-1.onrender.com/api/workshops` - Create workshop (admin only)
+- `PUT https://vhass-server-1.onrender.com/api/workshops/:id` - Update workshop (admin only)
+- `DELETE https://vhass-server-1.onrender.com/api/workshops/:id` - Delete workshop (admin only)
 
 ## 💳 Payment Integration
 
@@ -169,6 +169,7 @@ The system sends emails for:
 ## 🚀 Deployment
 
 ### Backend (Render.com)
+- Production URL: https://vhass-server-1.onrender.com
 - Automatic deployments from GitHub
 - Environment variables configuration
 - SSL/TLS enabled
