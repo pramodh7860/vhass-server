@@ -47,7 +47,8 @@ app.use(cors({
     
     const allowedOrigins = [
       'http://localhost:3000',
-      'https://vhass-server-1.onrender.com'
+      'https://vhass-server-1.onrender.com',
+      'https://helpful-kringle-b5cb93.netlify.app'
     ];
     
     if (allowedOrigins.indexOf(origin) !== -1) {
@@ -176,8 +177,6 @@ mongoose.connect("mongodb+srv://pramodhkumar782006:pramodh786@cluster0.a0woy.mon
   tlsAllowInvalidHostnames: true,
   retryWrites: true,
   w: 'majority',
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   maxPoolSize: 10,
   minPoolSize: 5,
   socketTimeoutMS: 45000,
